@@ -7,8 +7,6 @@ import graphviz
 from sorbing_model import SubstanceState, Neutralizer
 import sorbing_model as m
 
-from control_block_diagram import ControllerDiagram
-from control_block_diagram import Point, Box, Connection
 
 st.set_page_config(layout="wide")
 
@@ -16,65 +14,24 @@ st.title("Технологическая схема")
 
 
 def get_process_flow(g: graphviz.Digraph, start_state: SubstanceState, process_steps: list[Neutralizer]):
-    i = 0
-    g.node(str(i), style="invis")
+    i = -1
+    g.node(str(i), shape='plaintext', label=str(start_state))
     i += 1
+    oil = deepcopy(start_state)
     for s in process_steps:
-        oil = deepcopy(start_state)
         g.node(str(i), label=s.name)
-        g.node(str(i) + 'u', style="invis")
-        g.node(str(i) + 'd', style="invis")
-        g.edge(str(i - 1)+':e', str(i)+':w', label=str(oil))
-
-        if len(s.reactive(oil)) > 0:
-            g.edge(str(i) + 'd:s', str(i)+':n', label=str(s.reactive(oil)))
-        else:
-            g.edge(str(i) + 'd:s', str(i)+':n', label="", style="invis")
-
-        if len(s.refuse(oil)) > 0:
-            g.edge(str(i)+':s', str(i) + 'u:n', label=str(s.refuse(oil)))
-        else:
-            g.edge(str(i)+':s', str(i) + 'u:n', label="", style="invis")
-
+        reactive = s.reactive(oil)
+        refuse = s.refuse(oil)
+        g.node(str(i) + 'r', shape='plaintext', label=refuse)
+        g.node(str(i) + 'l', shape='plaintext', label=reactive, margin='0.0')
+        g.edge(f"{i}l:e", f"{i}:w", label='', style="invis" if len(reactive) == 0 else "")
+        g.edge(f"{i}:e", f"{i}r:w", label='', style="invis" if len(refuse) == 0 else "")
+        g.edge(str(i - 1)+':s', str(i)+':n', label=str(oil))
         s.reaction(oil)
-
-        start_state = oil
         i += 1
-    g.node(str(i), style="invis")
-    g.edge(str(i - 1), str(i), label=str(start_state))
+    g.node(str(i), shape='plaintext', label=str(oil))
+    g.edge(str(i - 1)+':s', str(i)+':n', label="")
 
-
-# def get_new_process_flow(start_state: SubstanceState, process_steps: list[Neutralizer]):
-#     doc = ControllerDiagram()
-#
-#     i = 0
-#     i += 1
-#     for s in process_steps:
-#         oil = deepcopy(start_state)
-#         inputs = dict(left=1, left_text=[str(oil)])
-#         if len(s.reactive(oil)) > 0:
-#             inputs['bottom'] = 1
-#             inputs['bottom_text'] = [s.reactive(oil)]
-#         Box(Point(i // 2 * 2, (i % 2) * 2), text=s.name, inputs=inputs)
-#
-#         # g.node(str(i), label=s.name, shape='box')
-#         # g.node(str(i) + 'u', style="invis")
-#         # g.node(str(i) + 'd', style="invis")
-#         # g.edge(str(i - 1), str(i), label=str(oil))
-#         #
-#         #
-#         # if len(s.refuse(oil)) > 0:
-#         #     g.edge( str(i), str(i) + 'u', label=str(s.refuse(oil)))
-#         # else:
-#         #     g.edge( str(i), str(i) + 'u', label="", style="invis")
-#
-#         s.reaction(oil)
-#
-#         start_state = oil
-#         i += 1
-#     # g.node(str(i), style="invis")
-#     # g.edge(str(i - 1), str(i), label=str(start_state))
-#     return doc
 
 
 def get_graph(speed, acid, impurities, water):
@@ -96,9 +53,8 @@ def get_graph(speed, acid, impurities, water):
         water = 0.2 / 100
 
     g = graphviz.Digraph(format='svg')
-    g.attr(nodesep='1.2', ranksep="1.2")
-    g.attr('node', shape='record', margin="0.3")
-    g.attr('edge', weight='1')
+    g.attr(nodesep='0.4', ranksep="0.5", fontsize="20")
+    g.attr('node', shape='record')
     steps = [Neutralizer(m.filtration_reaction, m.filtration_refuse, m.filtration_reactive, "Фильтрация"),
              Neutralizer(m.drying_reaction, m.drying_refuse, m.drying_reactive, "Удаление воды"),
              Neutralizer(m.oxid_sorb_reaction, m.oxid_sorb_refuse, m.oxid_sorb_reactive, "Сорбция кислот"),
