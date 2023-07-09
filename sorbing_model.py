@@ -2,7 +2,7 @@ class SubstanceState:
     def __init__(self, speed: float, acid: float, impurities: float, water: float):
         self.speed = speed
         self.acid = acid
-        self.acid_mass = acid / 56000 * 170 * speed
+        self.acid_mass = get_axid_mass(acid) * speed
         self.impurities_mass = impurities * speed
         self.water_mass = water * speed
         self.hydrocarbons = True
@@ -25,6 +25,10 @@ class SubstanceState:
         result += f"НУВ\n" if self.hydrocarbons else ""
         result += f"{self.speed:.4g} кг/час"
         return result
+
+
+def get_axid_mass(acid):
+    return acid / 56000 * 170
 
 
 class Neutralizer:
@@ -84,7 +88,7 @@ def hydrocarbons_reaction(oil: SubstanceState):
 
 
 def hydrocarbons_refuse(oil: SubstanceState):
-    return f"Крупнопористый силикагель: {oil.speed * 0.1:.4g}кг/час\nНУВ много кг/час"
+    return f"Крупнопористый силикагель: {oil.speed * 0.1:.4g}кг/час\nНУВ"
 
 
 def hydrocarbons_reactive(oil: SubstanceState):
