@@ -1,6 +1,5 @@
 class SubstanceState:
     def __init__(self, speed: float, acid: float, impurities: float, water: float):
-        print(acid, speed, water)
         self.speed = speed
         self.acid = acid
         self.acid_mass = acid / 56000 * 170 * speed
