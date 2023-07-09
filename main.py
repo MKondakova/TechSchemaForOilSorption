@@ -15,15 +15,19 @@ st.title("Технологическая схема")
 
 def get_process_flow(g: graphviz.Digraph, start_state: SubstanceState, process_steps: list[Neutralizer]):
     i = -1
-    g.node(str(i), shape='plaintext', label=str(start_state))
+    g.node(str(i), shape='plaintext', label=str(start_state), group='2')
+    g.node(str(i) + 'r', shape='plaintext', label="", group='1')
+    g.node(str(i) + 'l', shape='plaintext', label="", margin='0.0', group='3')
+    g.edge(f"{i}l:e", f"{i}:w", label='', style="invis")
+    g.edge(f"{i}:e", f"{i}r:w", label='', style="invis")
     i += 1
     oil = deepcopy(start_state)
     for s in process_steps:
-        g.node(str(i), label=s.name)
+        g.node(str(i), label=s.name, group='2')
         reactive = s.reactive(oil)
         refuse = s.refuse(oil)
-        g.node(str(i) + 'r', shape='plaintext', label=refuse)
-        g.node(str(i) + 'l', shape='plaintext', label=reactive, margin='0.0')
+        g.node(str(i) + 'r', shape='plaintext', label=refuse, group='1')
+        g.node(str(i) + 'l', shape='plaintext', label=reactive, margin='0.0', group='3')
         g.edge(f"{i}l:e", f"{i}:w", label='', style="invis" if len(reactive) == 0 else "")
         g.edge(f"{i}:e", f"{i}r:w", label='', style="invis" if len(refuse) == 0 else "")
         g.edge(str(i - 1)+':s', str(i)+':n', label=str(oil))
@@ -61,7 +65,7 @@ def get_graph(speed, acid, impurities, water):
              Neutralizer(m.hydrocarbons_reaction, m.hydrocarbons_refuse, m.hydrocarbons_reactive, "Сорбция НУВ"),
              Neutralizer(m.filtration_reaction, m.filtration_refuse, m.filtration_reactive, "Фильтрация"),]
     get_process_flow(g, SubstanceState(speed, acid, impurities, water), steps)
-    return g
+    return g.render()
 
 
 empt = st.empty()
@@ -74,4 +78,4 @@ with st.form(key='my_form'):
     submit_button = st.form_submit_button(label='Обновить')
 
 with empt:
-    empt.write(get_graph(speed_input, acid_input, impurities_input, water_input))
+    empt.image(get_graph(speed_input, acid_input, impurities_input, water_input))

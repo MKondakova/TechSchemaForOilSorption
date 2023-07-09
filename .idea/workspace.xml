@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="77bea2e4-78d4-48be-91b2-d2679c7dbd96" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Digraph.gv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Digraph.gv" beforeDir="false" afterPath="$PROJECT_DIR$/Digraph.gv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Digraph.gv.svg" beforeDir="false" afterPath="$PROJECT_DIR$/Digraph.gv.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
@@ -58,12 +58,23 @@
       <option name="presentableId" value="Default" />
       <updated>1688817921397</updated>
       <workItem from="1688817923824" duration="38645000" />
-      <workItem from="1688891028100" duration="7720000" />
+      <workItem from="1688891028100" duration="8757000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="Space.CommitStatus" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
